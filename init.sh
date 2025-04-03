@@ -30,7 +30,6 @@ sudo apt-get install -y firewalld
 
 if [[ "$1" == "m" ]]; then
   echo "Configuring master node"
-  sudo hostnamectl set-hostname master
   sudo firewall-cmd --add-port=2376/tcp --permanent
   sudo firewall-cmd --add-port=7946/tcp --permanent
   sudo firewall-cmd --add-port=7946/udp --permanent
@@ -40,7 +39,6 @@ if [[ "$1" == "m" ]]; then
   sudo reboot
 elif [[ "$1" == "w" ]]; then
   echo "Configuring worker node"
-  sudo hostnamectl set-hostname worker
   sudo firewall-cmd --add-port=2376/tcp --permanent
   sudo firewall-cmd --add-port=7946/tcp --permanent
   sudo firewall-cmd --add-port=7946/udp --permanent
