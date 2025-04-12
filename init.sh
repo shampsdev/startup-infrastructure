@@ -36,7 +36,6 @@ if [[ "$1" == "m" ]]; then
   sudo firewall-cmd --add-port=4789/udp --permanent
   sudo firewall-cmd --reload
   sudo systemctl restart docker
-  sudo reboot
 elif [[ "$1" == "w" ]]; then
   echo "Configuring worker node"
   sudo firewall-cmd --add-port=2376/tcp --permanent
@@ -44,5 +43,7 @@ elif [[ "$1" == "w" ]]; then
   sudo firewall-cmd --add-port=7946/udp --permanent
   sudo firewall-cmd --add-port=4789/udp --permanent
   sudo firewall-cmd --reload
-  sudo reboot
+  sudo systemctl restart docker
 fi
+
+echo "Recommend to reboot machine."
