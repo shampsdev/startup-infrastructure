@@ -19,15 +19,15 @@ services:
         - traefik.enable=true
         - traefik.docker.network=traefik
         # Роутинг
-        - traefik.http.routers.traefik-dashboard.rule=Host(`traefik.shamps.dev`)
         - traefik.http.routers.traefik-dashboard.entrypoints=https
+        - traefik.http.routers.traefik-dashboard.rule=Host(`traefik.shamps.dev`)
         - traefik.http.routers.traefik-dashboard.tls.certresolver=letsEncrypt
         - traefik.http.routers.traefik-dashboard.service=api@internal
         - traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080
 
         # Basic auth
         - traefik.http.routers.traefik-dashboard.middlewares=dashboard-auth
-        - "traefik.http.middlewares.dashboard-auth.basicauth.users=admin:$$2y$$05$$i3FA2VK/YSA7ys4pFpqxIe68q5iJ4hDWXxGISC4lE7SgJMMXOlyla"
+        - "traefik.http.middlewares.dashboard-auth.basicauth.users=login:pswd"
 
       placement:
         constraints:
@@ -38,7 +38,6 @@ services:
         order: start-first
     networks:
       - traefik
-
 
 configs:
   traefik-config:
@@ -51,3 +50,4 @@ volumes:
 networks:
   traefik:
     external: true
+    
