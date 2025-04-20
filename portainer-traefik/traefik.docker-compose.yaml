@@ -1,0 +1,53 @@
+services:
+  traefik:
+    image: traefik:3.0
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-ssl:/ssl
+    configs:
+      - source: traefik-config
+        target: /traefik.yaml
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik
+        # Роутинг
+        - traefik.http.routers.traefik-dashboard.entrypoints=https
+        - traefik.http.routers.traefik-dashboard.rule=Host(`traefik.shamps.dev`)
+        - traefik.http.routers.traefik-dashboard.tls.certresolver=letsEncrypt
+        - traefik.http.routers.traefik-dashboard.service=api@internal
+        - traefik.http.services.traefik-dashboard.loadbalancer.server.port=8080
+
+        # Basic auth
+        - traefik.http.routers.traefik-dashboard.middlewares=dashboard-auth
+        - "traefik.http.middlewares.dashboard-auth.basicauth.users=login:pswd"
+
+      placement:
+        constraints:
+          - "node.labels.TAG==master"
+      update_config:
+        parallelism: 1
+        delay: 5s
+        order: start-first
+    networks:
+      - traefik
+
+configs:
+  traefik-config:
+    name: traefik-config-v1
+    external: true
+
+volumes:
+  traefik-ssl:
+
+networks:
+  traefik:
+    external: true
+    
